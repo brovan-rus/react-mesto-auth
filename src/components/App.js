@@ -1,7 +1,6 @@
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
-import PopupWithForm from "./PopupWithForm";
 import React from "react";
 import ImagePopup from "./ImagePopup";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
@@ -10,6 +9,8 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import CardDelApprovePopup from "./CardDelApprovePopup";
+import { Route, Switch, Link } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfileOpen] = React.useState(false);
@@ -149,49 +150,68 @@ function App() {
       .catch((err) => console.log(err));
   }
 
+  const [loggedIn, setLoggedIn] = React.useState(true);
+
   return (
-    <CurrentUserContext.Provider value={currentUser}>
-      <div className="page page_position_center">
-        <Header />
-        <Main
-          handleAddPlaceClick={handleAddPlaceClick}
-          handleEditAvatarClick={handleEditAvatarClick}
-          handleProfileEditClick={handleProfileEditClick}
-          handleCardClick={handleCardClick}
-          cards={cards}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelApprove}
-        />
-        <Footer />
-      </div>
+    <>
+      {/*<Route path="*">{!loggedIn && <Redirect to="/sign-in" />}</Route>*/}
+      <Switch>
+        <ProtectedRoute path="/" loggedIn={loggedIn} exact>
+          <CurrentUserContext.Provider value={currentUser}>
+            <div className="page page_position_center">
+              <Header />
+              <Main
+                handleAddPlaceClick={handleAddPlaceClick}
+                handleEditAvatarClick={handleEditAvatarClick}
+                handleProfileEditClick={handleProfileEditClick}
+                handleCardClick={handleCardClick}
+                cards={cards}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelApprove}
+              />
+              <Footer />
+            </div>
 
-      <EditProfilePopup
-        isOpen={isEditProfilePopupOpen}
-        onClose={closeAllPopups}
-        onUpdateUser={handleUpdateUser}
-      />
+            <EditProfilePopup
+              isOpen={isEditProfilePopupOpen}
+              onClose={closeAllPopups}
+              onUpdateUser={handleUpdateUser}
+            />
 
-      <EditAvatarPopup
-        isOpen={isEditAvatarPopupOpen}
-        onClose={closeAllPopups}
-        onUpdateAvatar={handleUpdateAvatar}
-      />
+            <EditAvatarPopup
+              isOpen={isEditAvatarPopupOpen}
+              onClose={closeAllPopups}
+              onUpdateAvatar={handleUpdateAvatar}
+            />
 
-      <AddPlacePopup
-        isOpen={isAddPlacePopupOpen}
-        onClose={closeAllPopups}
-        onCardAdd={handleCardAdd}
-      />
+            <AddPlacePopup
+              isOpen={isAddPlacePopupOpen}
+              onClose={closeAllPopups}
+              onCardAdd={handleCardAdd}
+            />
 
-      <CardDelApprovePopup
-        isOpen={isCardDelApprovePopupOpen}
-        onClose={closeAllPopups}
-        card={deletingCard}
-        onCardDel={handleCardDelete}
-      />
+            <CardDelApprovePopup
+              isOpen={isCardDelApprovePopupOpen}
+              onClose={closeAllPopups}
+              card={deletingCard}
+              onCardDel={handleCardDelete}
+            />
+            <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+          </CurrentUserContext.Provider>
+        </ProtectedRoute>
 
-      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-    </CurrentUserContext.Provider>
+        <ProtectedRoute loggedIn={loggedIn} path="/sign-up">
+          <h1>Страница для регистрации</h1>
+        </ProtectedRoute>
+        <Route path="/sign-in">
+          <h1>Страница для логина</h1>
+        </Route>
+        <ProtectedRoute path="*" loggedIn={loggedIn}>
+          <h1>Ошибка 404</h1>
+          <Link to="/">На главную</Link>
+        </ProtectedRoute>
+      </Switch>
+    </>
   );
 }
 
