@@ -1,15 +1,15 @@
-.header__link {
+.user-form__link{
   font-family: 'Inter', 'Arial', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
-  text-align: right;
-  color: #FFF;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #FFFFFF;
   text-decoration: none;
   transition: opacity 0.5s linear;
 }
 
-.header__link:hover{
+.user-form__link:hover{
   opacity: 0.6;
 }

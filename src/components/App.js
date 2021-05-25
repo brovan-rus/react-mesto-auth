@@ -12,6 +12,7 @@ import CardDelApprovePopup from "./CardDelApprovePopup";
 import { Route, Switch, Link } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
+import Register from "./Register";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfileOpen] = React.useState(false);
@@ -160,7 +161,7 @@ function App() {
         <ProtectedRoute path="/" loggedIn={loggedIn} exact>
           <CurrentUserContext.Provider value={currentUser}>
             <div className="page page_position_center">
-              <Header linkText="Выйти" email="brovan@yandex.ru" />
+              <Header linkText="Выйти" email="brovan@yandex.ru" place="main" />
               <Main
                 handleAddPlaceClick={handleAddPlaceClick}
                 handleEditAvatarClick={handleEditAvatarClick}
@@ -200,21 +201,23 @@ function App() {
             <ImagePopup card={selectedCard} onClose={closeAllPopups} />
           </CurrentUserContext.Provider>
         </ProtectedRoute>
-
-        <ProtectedRoute loggedIn={loggedIn} path="/sign-up">
+        <Route loggedIn={loggedIn} path="/sign-up">
           <div className="page page_position_center">
-            <h1 className="header__link">Страница для регистрации</h1>
+            <Header linkText="Войти" linkTo="/sign-in" place="main" />
+            <Register />
           </div>
-        </ProtectedRoute>
+        </Route>
         <Route path="/sign-in">
           <div className="page page_position_center">
-            <Header linkText="Регистрация" />
+            <Header linkText="Регистрация" linkTo="/sign-up" />
             <Login />
           </div>
         </Route>
         <ProtectedRoute path="*" loggedIn={loggedIn}>
-          <h1>Ошибка 404</h1>
-          <Link to="/">На главную</Link>
+          <div className="page page_position_center">
+            <h1>Ошибка 404</h1>
+            <Link to="/">На главную</Link>
+          </div>
         </ProtectedRoute>
       </Switch>
     </>

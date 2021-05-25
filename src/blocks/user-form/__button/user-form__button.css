@@ -1,0 +1,14 @@
+.user-form__button{
+  height: 50px;
+  border-radius: 2px;
+  border: 0;
+  outline: none;
+  font-family: 'Inter', 'Arial', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  color: #000000;
+  cursor: pointer ;
+}
