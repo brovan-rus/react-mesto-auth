@@ -1,20 +1,7 @@
 import React from "react";
+import UserForm from "./UserForm";
 
-function Login() {
-  return (
-    <form className="user-form">
-      <h1 className="user-form__title">Вход</h1>
-      <input className="user-form__input" placeholder="Email" type="email" />
-      <input
-        className="user-form__input"
-        placeholder="Пароль"
-        type="password"
-      />
-      <button className="user-form__button" type="submit">
-        Войти
-      </button>
-    </form>
-  );
+function Login({ title, buttonText, onLogin }) {
+  return <UserForm title={title} buttonText={buttonText} onSubmit={onLogin} />;
 }
-
 export default Login;

@@ -1,3 +1,5 @@
-.header__nav_place_mobile-menu {
-  grid-template-rows: 142px min-content;
+@media screen and (max-width: 590px){
+  .header__nav_place_mobile-menu {
+    grid-template-rows: 142px min-content;
+  }
 }

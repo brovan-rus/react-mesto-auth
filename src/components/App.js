@@ -152,7 +152,7 @@ function App() {
       .catch((err) => console.log(err));
   }
 
-  const [loggedIn, setLoggedIn] = React.useState(true);
+  const [loggedIn, setLoggedIn] = React.useState(false);
 
   return (
     <Switch>
@@ -201,14 +201,14 @@ function App() {
       </ProtectedRoute>
       <Route loggedIn={loggedIn} path="/sign-up">
         <div className="page page_position_center">
-          <Header linkText="Войти" linkTo="/sign-in" place="main" />
-          <Register />
+          <Header linkText="Войти" linkTo="/sign-in" />
+          <Register title="Регистрация" buttonText="Зарегистрироваться" />
         </div>
       </Route>
       <Route path="/sign-in">
         <div className="page page_position_center">
           <Header linkText="Регистрация" linkTo="/sign-up" />
-          <Login />
+          <Login title="Вход" buttonText="Войти" />
         </div>
       </Route>
       <ProtectedRoute path="*" loggedIn={loggedIn}>
