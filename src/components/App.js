@@ -152,75 +152,72 @@ function App() {
       .catch((err) => console.log(err));
   }
 
-  const [loggedIn, setLoggedIn] = React.useState(false);
+  const [loggedIn, setLoggedIn] = React.useState(true);
 
   return (
-    <>
-      {/*<Route path="*">{!loggedIn && <Redirect to="/sign-in" />}</Route>*/}
-      <Switch>
-        <ProtectedRoute path="/" loggedIn={loggedIn} exact>
-          <CurrentUserContext.Provider value={currentUser}>
-            <div className="page page_position_center">
-              <Header linkText="Выйти" email="brovan@yandex.ru" place="main" />
-              <Main
-                handleAddPlaceClick={handleAddPlaceClick}
-                handleEditAvatarClick={handleEditAvatarClick}
-                handleProfileEditClick={handleProfileEditClick}
-                handleCardClick={handleCardClick}
-                cards={cards}
-                onCardLike={handleCardLike}
-                onCardDelete={handleCardDelApprove}
-              />
-              <Footer />
-            </div>
-
-            <EditProfilePopup
-              isOpen={isEditProfilePopupOpen}
-              onClose={closeAllPopups}
-              onUpdateUser={handleUpdateUser}
-            />
-
-            <EditAvatarPopup
-              isOpen={isEditAvatarPopupOpen}
-              onClose={closeAllPopups}
-              onUpdateAvatar={handleUpdateAvatar}
-            />
-
-            <AddPlacePopup
-              isOpen={isAddPlacePopupOpen}
-              onClose={closeAllPopups}
-              onCardAdd={handleCardAdd}
-            />
-
-            <CardDelApprovePopup
-              isOpen={isCardDelApprovePopupOpen}
-              onClose={closeAllPopups}
-              card={deletingCard}
-              onCardDel={handleCardDelete}
-            />
-            <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-          </CurrentUserContext.Provider>
-        </ProtectedRoute>
-        <Route loggedIn={loggedIn} path="/sign-up">
+    <Switch>
+      <ProtectedRoute path="/" loggedIn={loggedIn} exact>
+        <CurrentUserContext.Provider value={currentUser}>
           <div className="page page_position_center">
-            <Header linkText="Войти" linkTo="/sign-in" place="main" />
-            <Register />
+            <Header linkText="Выйти" email="brovan@yandex.ru" place="main" />
+            <Main
+              handleAddPlaceClick={handleAddPlaceClick}
+              handleEditAvatarClick={handleEditAvatarClick}
+              handleProfileEditClick={handleProfileEditClick}
+              handleCardClick={handleCardClick}
+              cards={cards}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelApprove}
+            />
+            <Footer />
           </div>
-        </Route>
-        <Route path="/sign-in">
-          <div className="page page_position_center">
-            <Header linkText="Регистрация" linkTo="/sign-up" />
-            <Login />
-          </div>
-        </Route>
-        <ProtectedRoute path="*" loggedIn={loggedIn}>
-          <div className="page page_position_center">
-            <h1>Ошибка 404</h1>
-            <Link to="/">На главную</Link>
-          </div>
-        </ProtectedRoute>
-      </Switch>
-    </>
+
+          <EditProfilePopup
+            isOpen={isEditProfilePopupOpen}
+            onClose={closeAllPopups}
+            onUpdateUser={handleUpdateUser}
+          />
+
+          <EditAvatarPopup
+            isOpen={isEditAvatarPopupOpen}
+            onClose={closeAllPopups}
+            onUpdateAvatar={handleUpdateAvatar}
+          />
+
+          <AddPlacePopup
+            isOpen={isAddPlacePopupOpen}
+            onClose={closeAllPopups}
+            onCardAdd={handleCardAdd}
+          />
+
+          <CardDelApprovePopup
+            isOpen={isCardDelApprovePopupOpen}
+            onClose={closeAllPopups}
+            card={deletingCard}
+            onCardDel={handleCardDelete}
+          />
+          <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        </CurrentUserContext.Provider>
+      </ProtectedRoute>
+      <Route loggedIn={loggedIn} path="/sign-up">
+        <div className="page page_position_center">
+          <Header linkText="Войти" linkTo="/sign-in" place="main" />
+          <Register />
+        </div>
+      </Route>
+      <Route path="/sign-in">
+        <div className="page page_position_center">
+          <Header linkText="Регистрация" linkTo="/sign-up" />
+          <Login />
+        </div>
+      </Route>
+      <ProtectedRoute path="*" loggedIn={loggedIn}>
+        <div className="page page_position_center">
+          <h1>Ошибка 404</h1>
+          <Link to="/">На главную</Link>
+        </div>
+      </ProtectedRoute>
+    </Switch>
   );
 }
 

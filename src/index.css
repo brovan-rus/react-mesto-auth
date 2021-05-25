@@ -8,6 +8,7 @@
 @import url('./blocks/header/header.css');
 @import url('./blocks/header/__logo/header__logo.css');
 @import url('./blocks/header/__info/header__info.css');
+@import url('./blocks/header/__info/_place/header__info_place_main.css');
 @import url('./blocks/header/__link/header__link.css');
 @import url('./blocks/header/__link/_place/header__link_place_main.css');
 @import url('./blocks/header/__nav/header__nav.css');
@@ -60,7 +61,13 @@
 @import url('./blocks/user-form/__button/user-form__button.css');
 @import url('./blocks/user-form/__title/user-form__title.css');
 @import url('./blocks/user-form/__input/user-form__input.css');
-@import url('./blocks/user-form/_place/user__form_place_register.css');
+@import url('blocks/user-form/_place/user-form_place_register.css');
 @import url('./blocks/user-form/__ending/user-form__ending.css');
 @import url('./blocks/user-form/__link/user-form__link.css');
 @import url('./blocks/user-form/__ending-container/user-form__ending-container.css');
+@import url('./blocks/hamburger/hamburger.css');
+@import url('./blocks/hamburger/__line/hamburger__line.css');
+@import url('./blocks/hamburger/_open/hamburger_open.css');
+@import url('./blocks/hamburger/__line/_hidden/hamburger__line_hidden.css');
+@import url('./blocks/header/__nav/_place/header__nav_place_mobile-menu.css');
+@import url('./blocks/header/__info/_place/header__info_place_mobile-menu.css');

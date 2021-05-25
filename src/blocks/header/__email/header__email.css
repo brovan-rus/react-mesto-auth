@@ -5,5 +5,11 @@
   font-size: 18px;
   line-height: 22px;
   text-align: right;
-  margin-right: 24px;
+  margin: 0 24px 0 0;
+}
+
+@media screen and (max-width: 590px){
+  .header__email {
+    margin: 0;
+  }
 }
