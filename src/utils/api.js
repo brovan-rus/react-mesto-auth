@@ -1,12 +1,5 @@
 import { apiUrl, cohort, token } from "./constants";
-
-function handleResponse(res) {
-  if (!res.ok) {
-    return Promise.reject(`Ошибка ${res}`);
-  } else {
-    return res.json();
-  }
-}
+import { handleResponse } from "./utils";
 
 class Api {
   constructor(url, groupId, token) {

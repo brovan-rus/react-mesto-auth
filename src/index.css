@@ -71,3 +71,6 @@
 @import url('./blocks/hamburger/__line/_hidden/hamburger__line_hidden.css');
 @import url('./blocks/header/__nav/_place/header__nav_place_mobile-menu.css');
 @import url('./blocks/header/__info/_place/header__info_place_mobile-menu.css');
+@import url('./blocks/popup/__container/_content/popup__container_content_message.css');
+@import url('./blocks/info-tool/__title/info-tool__title.css');
+@import url('./blocks/info-tool/__image/info-tool__image.css');

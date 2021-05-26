@@ -13,6 +13,7 @@ import { Route, Switch, Link } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
 import Register from "./Register";
+import { signIn, signUp, checkAuth } from "./Auth";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfileOpen] = React.useState(false);
@@ -154,6 +155,11 @@ function App() {
 
   const [loggedIn, setLoggedIn] = React.useState(false);
 
+  const handleRegister = (email, password) => {
+    console.log(signUp(email, password));
+    console.log(JSON.stringify({ password: password, email: email }));
+  };
+
   return (
     <Switch>
       <ProtectedRoute path="/" loggedIn={loggedIn} exact>
@@ -199,10 +205,15 @@ function App() {
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
         </CurrentUserContext.Provider>
       </ProtectedRoute>
+
       <Route loggedIn={loggedIn} path="/sign-up">
         <div className="page page_position_center">
           <Header linkText="Войти" linkTo="/sign-in" />
-          <Register title="Регистрация" buttonText="Зарегистрироваться" />
+          <Register
+            title="Регистрация"
+            buttonText="Зарегистрироваться"
+            onRegister={handleRegister}
+          />
         </div>
       </Route>
       <Route path="/sign-in">

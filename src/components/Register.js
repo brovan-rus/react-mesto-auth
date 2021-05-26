@@ -3,8 +3,11 @@ import React from "react";
 import UserForm from "./UserForm";
 
 function Register({ title, buttonText, onRegister }) {
+  const handleRegister = (email, password) => {
+    onRegister(email, password);
+  };
   return (
-    <UserForm title={title} buttonText={buttonText} onSubmit={onRegister}>
+    <UserForm title={title} buttonText={buttonText} onSubmit={handleRegister}>
       <div className="user-form__ending-container">
         <span className="user-form__ending">Уже зарегистрированы?</span>
         <Link className="user-form__link" to="/sing-in">

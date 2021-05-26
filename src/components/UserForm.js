@@ -1,8 +1,8 @@
 import React from "react";
 
 function UserForm({ title, buttonText, onSubmit, children }) {
-  const [email, setEmail] = React.useState();
-  const [password, setPassword] = React.useState();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const handleSetEmail = (e) => {
     setEmail(e.target.value);
   };
