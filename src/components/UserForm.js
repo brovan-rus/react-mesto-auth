@@ -1,6 +1,6 @@
 import React from "react";
 
-function UserForm({ title, buttonText, onSubmit, children }) {
+function UserForm({ place, title, buttonText, onSubmit, children }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const handleSetEmail = (e) => {
@@ -14,7 +14,10 @@ function UserForm({ title, buttonText, onSubmit, children }) {
     onSubmit(email, password);
   };
   return (
-    <form className="user-form" onSubmit={handleSubmit}>
+    <form
+      className={place ? `user-form user-form_place_${place}` : "user-form"}
+      onSubmit={handleSubmit}
+    >
       <h1 className="user-form__title">{title}</h1>
       <input
         className="user-form__input"

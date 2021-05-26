@@ -7,7 +7,12 @@ function Register({ title, buttonText, onRegister }) {
     onRegister(email, password);
   };
   return (
-    <UserForm title={title} buttonText={buttonText} onSubmit={handleRegister}>
+    <UserForm
+      place="register"
+      title={title}
+      buttonText={buttonText}
+      onSubmit={handleRegister}
+    >
       <div className="user-form__ending-container">
         <span className="user-form__ending">Уже зарегистрированы?</span>
         <Link className="user-form__link" to="/sing-in">
