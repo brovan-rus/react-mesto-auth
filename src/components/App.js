@@ -9,11 +9,12 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import CardDelApprovePopup from "./CardDelApprovePopup";
-import { Route, Switch, Link } from "react-router-dom";
+import { Route, Switch, Link, useHistory } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
 import Register from "./Register";
 import { signIn, signUp, checkAuth } from "./Auth";
+import InfoTooltip from "./InfoTooltip";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfileOpen] = React.useState(false);
@@ -24,6 +25,12 @@ function App() {
   const [isCardDelApprovePopupOpen, setIsCardDelApprovePopup] = React.useState(
     false
   );
+  const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = React.useState(
+    false
+  );
+  const [isRegistrationSuccess, setIsRegistrationSuccess] = React.useState(
+    false
+  );
   const [selectedCard, setSelectedCard] = React.useState({ isOpened: false });
   const [currentUser, setCurrentUser] = React.useState({
     userName: "Загрузка...",
@@ -32,17 +39,10 @@ function App() {
     userId: "",
   });
   const [deletingCard, setDeletingCard] = React.useState({});
-
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [userEmail, setUserEmail] = React.useState("email");
   const [cards, setCards] = React.useState([]);
-
-  React.useEffect(() => {
-    api
-      .getInitialCards()
-      .then((answer) => {
-        setCards(answer);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  const history = useHistory();
 
   const handleCardLike = (card) => {
     const isLikedByMe = card.likes.some(
@@ -88,6 +88,27 @@ function App() {
       .catch((err) => console.log(err));
   }, []);
 
+  React.useEffect(() => {
+    api
+      .getInitialCards()
+      .then((answer) => {
+        setCards(answer);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  React.useEffect(() => {
+    if (localStorage.getItem("jwt")) {
+      checkAuth(localStorage.getItem("jwt"))
+        .then((res) => {
+          setUserEmail(res.data.email);
+          setIsLoggedIn(true);
+          history.push("/");
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [localStorage.getItem("jwt")]);
+
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
@@ -106,6 +127,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsCardDelApprovePopup(false);
     setSelectedCard({ isOpened: false });
+    setIsInfoTooltipPopupOpen(false);
   }
 
   function handleCardClick(card) {
@@ -153,19 +175,49 @@ function App() {
       .catch((err) => console.log(err));
   }
 
-  const [loggedIn, setLoggedIn] = React.useState(false);
-
   const handleRegister = (email, password) => {
-    console.log(signUp(email, password));
-    console.log(JSON.stringify({ password: password, email: email }));
+    signUp(email, password)
+      .then((res) => {
+        setIsLoggedIn(true);
+        setIsInfoTooltipPopupOpen(true);
+        setIsRegistrationSuccess(true);
+        setUserEmail(email);
+        handleLogin(email, password);
+        history.push("/");
+      })
+      .catch((e) => {
+        console.log(e);
+        setIsInfoTooltipPopupOpen(true);
+        setIsRegistrationSuccess(false);
+      });
+  };
+
+  const handleLogin = (email, password) => {
+    signIn(email, password).then((res) => {
+      console.log(res.token);
+      localStorage.setItem("jwt", res.token);
+      setIsLoggedIn(true);
+      history.push("/");
+    });
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("jwt");
+    setIsLoggedIn(false);
+    history.push("/");
   };
 
   return (
     <Switch>
-      <ProtectedRoute path="/" loggedIn={loggedIn} exact>
+      <ProtectedRoute path="/" loggedIn={isLoggedIn} exact>
         <CurrentUserContext.Provider value={currentUser}>
           <div className="page page_position_center">
-            <Header linkText="Выйти" email="brovan@yandex.ru" place="main" />
+            <Header
+              linkText="Выйти"
+              email={userEmail}
+              place="main"
+              onLogout={handleLogout}
+            />
             <Main
               handleAddPlaceClick={handleAddPlaceClick}
               handleEditAvatarClick={handleEditAvatarClick}
@@ -203,26 +255,40 @@ function App() {
             onCardDel={handleCardDelete}
           />
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+          {isRegistrationSuccess && (
+            <InfoTooltip
+              isOpen={isInfoTooltipPopupOpen}
+              onClose={closeAllPopups}
+              isSuccess={isRegistrationSuccess}
+            />
+          )}
         </CurrentUserContext.Provider>
       </ProtectedRoute>
 
-      <Route loggedIn={loggedIn} path="/sign-up">
+      <Route loggedIn={isLoggedIn} path="/sign-up">
         <div className="page page_position_center">
-          <Header linkText="Войти" linkTo="/sign-in" />
+          <Header linkText="Войти" link="/sign-in" />
           <Register
             title="Регистрация"
             buttonText="Зарегистрироваться"
             onRegister={handleRegister}
           />
+          {!isRegistrationSuccess && (
+            <InfoTooltip
+              isOpen={isInfoTooltipPopupOpen}
+              onClose={closeAllPopups}
+              isSuccess={isRegistrationSuccess}
+            />
+          )}
         </div>
       </Route>
       <Route path="/sign-in">
         <div className="page page_position_center">
-          <Header linkText="Регистрация" linkTo="/sign-up" />
-          <Login title="Вход" buttonText="Войти" />
+          <Header linkText="Регистрация" link="/sign-up" />
+          <Login title="Вход" buttonText="Войти" onLogin={handleLogin} />
         </div>
       </Route>
-      <ProtectedRoute path="*" loggedIn={loggedIn}>
+      <ProtectedRoute path="*" loggedIn={isLoggedIn}>
         <div className="page page_position_center">
           <h1>Ошибка 404</h1>
           <Link to="/">На главную</Link>

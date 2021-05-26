@@ -8,6 +8,7 @@
   color: #FFF;
   text-decoration: none;
   transition: opacity 0.5s linear;
+  cursor: pointer;
 }
 
 .header__link:hover{

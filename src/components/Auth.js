@@ -5,19 +5,20 @@ export const BASE_URL = "https://auth.nomoreparties.co";
 export const signIn = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ password: password, email: email }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ password, email }),
   }).then(handleResponse);
 };
 
 export const signUp = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      password: password,
-      email: email,
-    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ password, email }),
   }).then(handleResponse);
 };
 
