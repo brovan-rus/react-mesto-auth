@@ -1,6 +1,12 @@
 function Popup({ isOpen, onClose, content, children }) {
+  const overlayHandler = (evt) => {
+    if (evt.target.classList.contains("popup_opened")) {
+      onClose();
+    }
+  };
   return (
     <div
+      onClick={overlayHandler}
       className={`popup popup_content_${content}, ${
         isOpen ? "popup_opened" : ""
       }`}
