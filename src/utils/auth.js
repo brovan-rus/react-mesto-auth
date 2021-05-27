@@ -1,4 +1,4 @@
-import { handleResponse } from "../utils/utils";
+import { handleResponse } from "./utils";
 
 export const BASE_URL = "https://auth.nomoreparties.co";
 

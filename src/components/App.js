@@ -13,7 +13,7 @@ import { Route, Switch, Link, useHistory } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
 import Register from "./Register";
-import { signIn, signUp, checkAuth } from "./Auth";
+import { signIn, signUp, checkAuth } from "../utils/auth";
 import InfoTooltip from "./InfoTooltip";
 
 function App() {
@@ -107,7 +107,7 @@ function App() {
         })
         .catch((e) => console.log(e));
     }
-  }, [localStorage.getItem("jwt")]);
+  }, []);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -193,12 +193,16 @@ function App() {
   };
 
   const handleLogin = (email, password) => {
-    signIn(email, password).then((res) => {
-      console.log(res.token);
-      localStorage.setItem("jwt", res.token);
-      setIsLoggedIn(true);
-      history.push("/");
-    });
+    signIn(email, password)
+      .then((res) => {
+        if (res.token) {
+          localStorage.setItem("jwt", res.token);
+          setIsLoggedIn(true);
+          setUserEmail(email);
+          history.push("/");
+        }
+      })
+      .catch((e) => console.log(e));
   };
 
   const handleLogout = () => {
@@ -208,10 +212,10 @@ function App() {
   };
 
   return (
-    <Switch>
-      <ProtectedRoute path="/" loggedIn={isLoggedIn} exact>
-        <CurrentUserContext.Provider value={currentUser}>
-          <div className="page page_position_center">
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="page page_position_center">
+        <Switch>
+          <ProtectedRoute path="/" loggedIn={isLoggedIn} exact>
             <Header
               linkText="Выйти"
               email={userEmail}
@@ -228,73 +232,54 @@ function App() {
               onCardDelete={handleCardDelApprove}
             />
             <Footer />
-          </div>
-
-          <EditProfilePopup
-            isOpen={isEditProfilePopupOpen}
-            onClose={closeAllPopups}
-            onUpdateUser={handleUpdateUser}
-          />
-
-          <EditAvatarPopup
-            isOpen={isEditAvatarPopupOpen}
-            onClose={closeAllPopups}
-            onUpdateAvatar={handleUpdateAvatar}
-          />
-
-          <AddPlacePopup
-            isOpen={isAddPlacePopupOpen}
-            onClose={closeAllPopups}
-            onCardAdd={handleCardAdd}
-          />
-
-          <CardDelApprovePopup
-            isOpen={isCardDelApprovePopupOpen}
-            onClose={closeAllPopups}
-            card={deletingCard}
-            onCardDel={handleCardDelete}
-          />
-          <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-          {isRegistrationSuccess && (
-            <InfoTooltip
-              isOpen={isInfoTooltipPopupOpen}
-              onClose={closeAllPopups}
-              isSuccess={isRegistrationSuccess}
+          </ProtectedRoute>
+          <Route loggedIn={isLoggedIn} path="/sign-up">
+            <Header linkText="Войти" link="/sign-in" />
+            <Register
+              title="Регистрация"
+              buttonText="Зарегистрироваться"
+              onRegister={handleRegister}
             />
-          )}
-        </CurrentUserContext.Provider>
-      </ProtectedRoute>
+          </Route>
+          <Route path="/sign-in">
+            <Header linkText="Регистрация" link="/sign-up" />
+            <Login title="Вход" buttonText="Войти" onLogin={handleLogin} />
+          </Route>
+          <ProtectedRoute path="*" loggedIn={isLoggedIn}>
+            <h1>Ошибка 404</h1>
+            <Link to="/">На главную</Link>
+          </ProtectedRoute>
+        </Switch>
 
-      <Route loggedIn={isLoggedIn} path="/sign-up">
-        <div className="page page_position_center">
-          <Header linkText="Войти" link="/sign-in" />
-          <Register
-            title="Регистрация"
-            buttonText="Зарегистрироваться"
-            onRegister={handleRegister}
-          />
-          {!isRegistrationSuccess && (
-            <InfoTooltip
-              isOpen={isInfoTooltipPopupOpen}
-              onClose={closeAllPopups}
-              isSuccess={isRegistrationSuccess}
-            />
-          )}
-        </div>
-      </Route>
-      <Route path="/sign-in">
-        <div className="page page_position_center">
-          <Header linkText="Регистрация" link="/sign-up" />
-          <Login title="Вход" buttonText="Войти" onLogin={handleLogin} />
-        </div>
-      </Route>
-      <ProtectedRoute path="*" loggedIn={isLoggedIn}>
-        <div className="page page_position_center">
-          <h1>Ошибка 404</h1>
-          <Link to="/">На главную</Link>
-        </div>
-      </ProtectedRoute>
-    </Switch>
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onCardAdd={handleCardAdd}
+        />
+        <CardDelApprovePopup
+          isOpen={isCardDelApprovePopupOpen}
+          onClose={closeAllPopups}
+          card={deletingCard}
+          onCardDel={handleCardDelete}
+        />
+        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <InfoTooltip
+          isOpen={isInfoTooltipPopupOpen}
+          onClose={closeAllPopups}
+          isSuccess={isRegistrationSuccess}
+        />
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 
